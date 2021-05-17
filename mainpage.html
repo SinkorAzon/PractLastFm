@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Menu principal Last FM</title>
+		<meta charset="utf-8">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/utf8.js"></script>
+		<script type="text/javascript" src="./js/md5.min.js"></script>
+		<script type="text/javascript" src="./js/main.js"></script>
+		<style type="text/css">
+
+
+		</style>
+	</head>
+	<body class="bg-dark text-light">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1 class="ms-2 mt-2 float-start">Usuari en Sessió --></h1>
+
+					<div id="success" class="float-end mt-2 me-2">
+				    <h2><div id="artistName"></div></h2>
+						<br><br>
+				    <div id="artistImage"></div>
+					</div>
+					<div id="error"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12 text-center mt-5 mb-5">
+					<button type="button" class="btn btn-lg btn-dark rounded border-danger" onclick="calculateApiSignatureStack()">
+						Calcular API-Sig
+					</button>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12 text-center">
+					<h3>Top Tracks Artist</h3>
+				</div>
+				<div class="col-6 text-center mt-3">
+					<button type="button" class="btn btn-light mb-3 rounded" onclick="loadTopTracksXml()">
+						Get Collection Xml
+					</button>
+					<table class="table table-dark" id="tabTopTracksXml"></table>
+				</div>
+				<div class="col-6 text-center mt-3">
+					<button type="button" class="btn btn-light mb-3 rounded" onclick="loadTopTracksJson()">
+						Get Collection Json
+					</button>
+					<table class="table table-dark table-borderless" id="tabTopTracksJson"></table>
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>
