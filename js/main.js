@@ -157,3 +157,60 @@ function getXmlQuery(xml) {
   }
   document.getElementById("tabTopTracksXml").innerHTML = table;
 }
+
+function loadChartTopArtistsJSONDoc(){
+  if (window.XMLHttpRequest) {
+		// Mozilla, Safari, IE7+
+		httpRequest = new XMLHttpRequest();
+		console.log("Creat l'objecte a partir de XMLHttpRequest.");
+	} else if (window.ActiveXObject) {
+		// IE 6 i anteriors
+		httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+		console.log("Creat l'objecte a partir de ActiveXObject.");
+	} else {
+		console.error("Error: Aquest navegador no suporta AJAX.");
+	}
+
+	//httpRequest.onload = processarResposta;
+	httpRequest.onprogress = mostrarProgres;
+  var urlquery ="http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
+  httpRequest.onreadystatechange = processarCanviEstat;
+
+  httpRequest.open('GET', urlquery, true);
+	httpRequest.overrideMimeType('text/plain');
+	httpRequest.send(null);
+
+  function processarCanviEstat() {
+    if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+      console.log("Exit transmissio.");
+      processarResposta(httpRequest.responseText);
+    }
+  }
+
+	function processarResposta(dades) {
+	  var	myObj = JSON.parse(dades);
+    var llista = document.createElement('ul');
+    var txt,x="";
+    txt += "<table class=\"table table-dark\">";
+    txt += "<tr><th>Nom</th><th>URL</th><th>Imatge</th></tr>";
+    console.log("Cantidad de artistas:" + myObj.artists.artist.length);
+    for (var i=0; i< 3;i++) {
+      txt += "<tr><td>" + myObj.artists.artist[i].name +
+      "</td><td>"+ myObj.artists.artist[i].url +
+      "</td><td><img src="+ myObj.artists.artist[i].image[2]["#text"] +
+      "/></td></tr>";
+    }
+
+    txt += "</table>";
+    document.getElementById("artist").innerHTML = txt;
+  }
+}
+
+function mostrarProgres(event) {
+  if (event.lengthComputable) {
+    var progres = 100 * event.loaded / event.total;
+    console.log("Completat: " + progres + "%");
+  } else {
+    console.log("No es pot calcular el progrés");
+  }
+}
