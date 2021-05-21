@@ -11,6 +11,7 @@ $.ajax({
     url : 'http://ws.audioscrobbler.com/2.0/?',
     data : 'method=user.getinfo&' +
            'user=SinkorAzon&'+
+           //'user=' + name + '&'+
            'api_key=6639a92311bbbc06dd40a075be240e27&' +
            'format=json',
     dataType : 'json',
@@ -144,7 +145,16 @@ function getXmlQuery(xml) {
 
   var table="<tr><th>Rank</th><th>Artist</th><th>Title</th><th>Playcount</th><th>Listeners</th></tr>";
   var x = xmlDoc.getElementsByTagName("track");
-  for (i = 0; i <x.length; i++) {
+  var limitArt = 0;
+  if(document.getElementById("limitArt1").checked == true) {
+    limitArt = document.getElementById("limitArt1").value;
+  } else if(document.getElementById("limitArt2").checked == true) {
+    limitArt = document.getElementById("limitArt2").value;
+  } else if(document.getElementById("limitArt3").checked == true) {
+    limitArt = document.getElementById("limitArt3").value;
+  }
+
+  for (i = 0; i < limitArt; i++) {
     table += "<tr><td>" + (i+1) + "</td><td>" +
     x[i].getElementsByTagName("artist")[0].getElementsByTagName("name")[0].childNodes[0].nodeValue +
     "</td><td>" +
@@ -156,4 +166,75 @@ function getXmlQuery(xml) {
     "</td></tr>";
   }
   document.getElementById("tabTopTracksXml").innerHTML = table;
+}
+
+function loadChartTopArtistsJSONDoc(){
+  if (window.XMLHttpRequest) {
+		// Mozilla, Safari, IE7+
+		httpRequest = new XMLHttpRequest();
+		console.log("Creat l'objecte a partir de XMLHttpRequest.");
+	} else if (window.ActiveXObject) {
+		// IE 6 i anteriors
+		httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+		console.log("Creat l'objecte a partir de ActiveXObject.");
+	} else {
+		console.error("Error: Aquest navegador no suporta AJAX.");
+	}
+
+	//httpRequest.onload = processarResposta;
+	httpRequest.onprogress = mostrarProgres;
+
+  var country = null;
+  country = document.getElementById("country").value;
+
+  var urlquery ="http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=" + country + "&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
+  httpRequest.onreadystatechange = processarCanviEstat;
+
+  httpRequest.open('GET', urlquery, true);
+	httpRequest.overrideMimeType('text/plain');
+	httpRequest.send(null);
+
+  function processarCanviEstat() {
+    if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+      console.log("Exit transmissio.");
+      processarResposta(httpRequest.responseText);
+    }
+  }
+
+	function processarResposta(dades) {
+	  var	myObj = JSON.parse(dades);
+    var llista = document.createElement('ul');
+
+    var limitCou = 0;
+    if(document.getElementById("limitCou1").checked == true) {
+      limitCou = document.getElementById("limitCou1").value;
+    } else if(document.getElementById("limitCou2").checked == true) {
+      limitCou = document.getElementById("limitArt2").value;
+    } else if(document.getElementById("limitCou3").checked == true) {
+      limitCou = document.getElementById("limitCou3").value;
+    }
+
+    var txt="";
+    txt += "<table class=\"table table-dark\">";
+    txt += "<tr><th>Nom</th><th>Listeners</th><th>URL</th></tr>";
+    console.log("Cantidad de artistas:" + myObj.topartists.artist.length);
+    for (var i=0; i < limitCou;i++) {
+      txt += "<tr><td>" + myObj.topartists.artist[i].name +
+      "</td><td>"+ myObj.topartists.artist[i].listeners +
+      "</td><td>"+ myObj.topartists.artist[i].url +
+      "</td></tr>";
+    }
+
+    txt += "</table>";
+    document.getElementById("artist").innerHTML = txt;
+  }
+}
+
+function mostrarProgres(event) {
+  if (event.lengthComputable) {
+    var progres = 100 * event.loaded / event.total;
+    console.log("Completat: " + progres + "%");
+  } else {
+    console.log("No es pot calcular el progrés");
+  }
 }
