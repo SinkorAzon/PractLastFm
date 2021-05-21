@@ -11,6 +11,7 @@ $.ajax({
     url : 'http://ws.audioscrobbler.com/2.0/?',
     data : 'method=user.getinfo&' +
            'user=SinkorAzon&'+
+           //'user=' + name + '&'+
            'api_key=6639a92311bbbc06dd40a075be240e27&' +
            'format=json',
     dataType : 'json',
