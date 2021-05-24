@@ -88,16 +88,16 @@
 
 						<div class="col-12 text-center mt-3">
 							<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal"
-								data-bs-target="#modelTopTck" onclick="loadTopTracksXml()">
+								data-bs-target="#modelTopTracks" onclick="loadTopTracksXml()">
 								Visualitzar Contingut Via Xml
 							</button>
 
 							<!-- Modal -->
-							<div class="modal" id="modelTopTck" tabindex="-1" aria-labelledby="modelTopTracks" aria-hidden="true">
+							<div class="modal" id="modelTopTracks" tabindex="-1" aria-labelledby="modelTopTracksLabel" aria-hidden="true">
 								<div class="modal-dialog">
 									<div class="modal-content" style="width:800px;">
 										<div class="modal-header">
-											<h5 class="modal-title text-dark" id="modelTopTracks">Top Tracks Artists</h5>
+											<h5 class="modal-title text-dark" id="modelTopTracksLabel">Top Tracks Artists</h5>
 											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 										</div>
 										<div class="modal-body">
@@ -175,16 +175,16 @@
 
 						<div class="col-12 text-center mt-3">
 							<button type="button" class="btn btn-light mb-3 rounded"
-								data-bs-toggle="modal" data-bs-target="#modelTopAlb" onclick="loadTopAlbumJSON()">
+								data-bs-toggle="modal" data-bs-target="#modelTopAlbums" onclick="loadTopAlbumJSON()">
 								Visualitzar Contingut Via Json
 							</button>
 
 							<!-- Modal -->
-							<div class="modal" id="modelTopAlb" tabindex="-1" aria-labelledby="modelTopAlbums" aria-hidden="true">
+							<div class="modal" id="modelTopAlbums" tabindex="-1" aria-labelledby="modelTopAlbumsLabel" aria-hidden="true">
 								<div class="modal-dialog">
 									<div class="modal-content" style="width:800px;">
 										<div class="modal-header">
-											<h5 class="modal-title text-dark" id="modelTopAlbums">Title...</h5>
+											<h5 class="modal-title text-dark" id="modelTopAlbumsLabel">Title...</h5>
 											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 										</div>
 
@@ -253,16 +253,16 @@
 								<option value="Pakistan">Pakistan</option>
 							</select>
 							<!-- Button trigger modal -->
-							<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal" data-bs-target="#exampleModal2" onclick="loadChartTopArtistsJSONDoc()">
+							<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal" data-bs-target="#modalTopCountry" onclick="loadChartTopArtistsJSONDoc()">
 								Get Collection Json
 							</button>
 
 							<!-- Modal -->
-							<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal fade" id="modalTopCountry" tabindex="-1" aria-labelledby="modalTopCountryLabel" aria-hidden="true">
 							  <div class="modal-dialog">
 							    <div class="modal-content" style="width:800px;">
 							      <div class="modal-header">
-							        <h5 class="modal-title text-dark" id="exampleModalLabel">Top Tracks Artist By Country</h5>
+							        <h5 class="modal-title text-dark" id="modalTopCountryLabel">Top Tracks Artist By Country</h5>
 							        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							      </div>
 							      <div class="modal-body">
@@ -280,6 +280,16 @@
 
 				<hr class="mt-5"><hr>
 
+				<div class="col-6 mt-5">
+					<div class="col-12 text-center">
+						<h3>Tag Jquery</h3>
+						<!-- Button trigger modal -->
+						<button type="button" class="btn btn-light mb-3 rounded" onclick="addTrackTagJquery()">
+							Afegir Tag
+						</button>
+						<table id="tagDemo"></table>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>

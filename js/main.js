@@ -299,3 +299,83 @@ function mostrarProgres(event) {
     console.log("No es pot calcular el progrés");
   }
 }
+
+function processarRespostaAddTagJquery(xml) {
+  txt = $(xml).find('lfm').attr('status');
+  if( txt == "ok") {
+    document.getElementById("tagDemo").innerHTML = "<h2>Added Tag Correct</h2>";
+  } else document.getElementById("tagDemo").innerHTML = "<h2>Failure</h2>";
+}
+
+function calculate_apisig(params){
+  //Crec que només necessitem apikey, token i secret i no necessitem params, els podem treure de sessionStorage
+  //Calcula l'apiSig a partir dels valors d'abans...
+    ss = "";
+    st = [];
+    so = {};
+    so['api_key'] = params['api_key'];
+    so['token'] = params['token'];
+    Object.keys(params).forEach(function(key){
+        st.push(key); // Get list of object keys
+    });
+    st.sort(); // Alphabetise it
+    st.forEach(function(std){
+        ss = ss + std + params[std]; // build string
+    });
+    ss += myshared_secret;
+    // console.log(ss + last_fm_data['secret']);
+    //Segons documentacio : https://www.last.fm/api/webauth
+    //api signature = md5("api_keyxxxxxxxxmethodauth.getSessiontokenxxxxxxxmysecret")
+    //OBJECTIU NOSTRE SERA ACONSEGUIR UNA LINEA COM AQUESTA
+    // api_keyAPIKEY1323454formatjsonmethodauth.getSessiontokenTOKEN876234876SECRET348264386
+    //hashed_sec = $.md5(unescape(encodeURIComponent(ss)));
+    var hashed_sec = md5(unescape(encodeURIComponent(ss))); // "2063c1608d6e0baf80249c42e2be5804"
+    console.log("La apiSig es: " + hashed_sec);
+    so['api_sig'] = hashed_sec; // Correct when calculated elsewhere.
+    return so; // Returns signed POSTable object
+}
+
+function addTrackTagJquery() {
+  if (sessionStorage.getItem("mySessionKey") == null) {
+    console.log("Error no estas authenticat");
+  } else {
+    //Estas loguejat i autenticat de forma correcta--
+    var tag1="Relax";
+    var tag2="Intense";
+    //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
+    var dades = {
+      method: "track.addTags",
+      artist : "Ksi",
+      track : "Patience",
+      //A comma delimited list of user supplied tags to apply to this track. Accepts a maximum of 10 tags.
+      //  tags : [tag1,tag2], but i think "tag1,tag2, tag3..." SHOULD WORK (  maximum of 10 tags)
+      //Tags as other parameters should be utf8-encoded two or more parameters seems doesnt work
+      tags : "nice",
+      api_key : myAPI_key,
+      token : captured,
+      sk : sessionStorage.getItem("mySessionKey")
+    };
+
+    var last_url="http://ws.audioscrobbler.com/2.0/";
+
+    var myapisigtag = calculate_apisig(dades);
+    console.log("La apiSig de Add TAg es: " + myapisigtag['api_sig']);
+    //Hauria de poder esborrar token perque no ho necessita en teoria pero si no no funciona
+    //delete dades["token"];
+    dades['api_sig']= myapisigtag['api_sig'];
+
+    $.ajax({
+      type: "POST", //both are same, in new version of jQuery type renamed to method
+      url: last_url,
+      data: dades,
+      dataType: "xml", //datatype especifica el tipus de dada que s'espera rebre del servidor
+      success: function(res){
+          processarRespostaAddTagJquery(res);
+      },
+      error : function(){
+          console.log("Error en addTag to track" + dades.track + "de l'artista" + dades.artist);
+          document.getElementById("tagDemo").innerHTML = "<h2>Failure</h2>";
+      }
+    });
+  }
+}
