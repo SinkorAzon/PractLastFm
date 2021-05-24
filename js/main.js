@@ -209,7 +209,7 @@ function loadChartTopArtistsJSONDoc(){
     if(document.getElementById("limitCou1").checked == true) {
       limitCou = document.getElementById("limitCou1").value;
     } else if(document.getElementById("limitCou2").checked == true) {
-      limitCou = document.getElementById("limitArt2").value;
+      limitCou = document.getElementById("limitCou2").value;
     } else if(document.getElementById("limitCou3").checked == true) {
       limitCou = document.getElementById("limitCou3").value;
     }
@@ -227,6 +227,67 @@ function loadChartTopArtistsJSONDoc(){
 
     txt += "</table>";
     document.getElementById("artist").innerHTML = txt;
+  }
+}
+
+function loadTopAlbumJSON(){
+  if (window.XMLHttpRequest) {
+		// Mozilla, Safari, IE7+
+		httpRequest = new XMLHttpRequest();
+		console.log("Creat l'objecte a partir de XMLHttpRequest.");
+	} else if (window.ActiveXObject) {
+		// IE 6 i anteriors
+		httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+		console.log("Creat l'objecte a partir de ActiveXObject.");
+	} else {
+		console.error("Error: Aquest navegador no suporta AJAX.");
+	}
+
+	//httpRequest.onload = processarResposta;
+	httpRequest.onprogress = mostrarProgres;
+
+  var urlquery ="http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=Ksi&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
+  httpRequest.onreadystatechange = processarCanviEstat;
+
+  httpRequest.open('GET', urlquery, true);
+	httpRequest.overrideMimeType('text/plain');
+	httpRequest.send(null);
+
+  function processarCanviEstat() {
+    if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+      console.log("Exit transmissio.");
+      processarResposta(httpRequest.responseText);
+    }
+  }
+
+	function processarResposta(dades) {
+	  var	myObj = JSON.parse(dades);
+    var llista = document.createElement('ul');
+
+    var limitCou = 0;
+    if(document.getElementById("limitAlb1").checked == true) {
+      limitCou = document.getElementById("limitAlb1").value;
+    } else if(document.getElementById("limitAlb2").checked == true) {
+      limitCou = document.getElementById("limitAlb2").value;
+    } else if(document.getElementById("limitAlb3").checked == true) {
+      limitCou = document.getElementById("limitAlb3").value;
+    }
+
+    var txt="";
+    txt += "<table class=\"table table-dark\">";
+    txt += "<tr><th>Rank</th><th>Artist</th><th>Nom</th><th>PlayCount</th><th>URL</th></tr>";
+    console.log("Cantidad de artistas:" + myObj.topalbums.album.length);
+    for (var i=0; i < limitCou;i++) {
+      txt += "<tr><td>" + (i+1) +
+      "</td><td>" + myObj.topalbums.album[i].artist.name +
+      "</td><td>" + myObj.topalbums.album[i].name +
+      "</td><td>"+ myObj.topalbums.album[i].playcount +
+      "</td><td>"+ myObj.topalbums.album[i].url +
+      "</td></tr>";
+    }
+
+    txt += "</table>";
+    document.getElementById("tabTopAlbumsJson").innerHTML = txt;
   }
 }
 
