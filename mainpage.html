@@ -18,7 +18,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
-					<h1 class="ms-2 mt-2 float-start">Usuari en Sessió --></h1>
+					<h1 class="ms-2 mt-2 float-start text-danger">Last.FM</h1>
 
 					<div id="success" class="float-end mt-2 me-2">
 				    <h2><div id="artistName"></div></h2>
@@ -38,131 +38,143 @@
 			</div>
 
 			<div class="row">
-				<div class="col-6 text-center">
-					<h3>Top Tracks Artists</h3>
-				</div>
-				<div class="col-6 text-center">
-					<h3>Top Tracks Artist By Country</h3>
-				</div>
-
-				<div class="col-6 text-center">
-					<div class="input-group">
-						<h5>Select Limit Tracks</h5>
-						<div class="form-check">
-						  <input class="form-check-input ms-2 me-2" type="radio" name="rdbArtist" id="limitArt1" value="5" checked>
-						  <label class="form-check-label" for="flexRadioDefault1">
-						    5 Tracks
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input ms-2 me-2" type="radio" name="rdbArtist" id="limitArt2" value="10">
-						  <label class="form-check-label" for="flexRadioDefault1">
-						    10 Tracks
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input ms-2 me-2" type="radio" name="rdbArtist" id="limitArt3" value="20">
-						  <label class="form-check-label" for="flexRadioDefault1">
-						    20 Tracks
-						  </label>
-						</div>
+				<div class="col-sm-12 col-lg-6">
+					<div class="col-12 text-center">
+						<h3>Artista Top Tracks</h3>
 					</div>
-				</div>
 
-				<div class="col-6 text-center">
-					<div class="input-group">
-						<h5>Select Limit Tracks</h5>
-						<div class="form-check">
-						  <input class="form-check-input ms-2 me-2" type="radio" name="rdbCountry" id="limitCou1" value="5" checked>
-						  <label class="form-check-label" for="flexRadioDefault1">
-						    5 Tracks
-						  </label>
+					<div class="col-12 text-center">
+						<div class="input-group">
+							<h5>Select Limit Tracks</h5>
+							<div class="form-check">
+								<input class="form-check-input ms-2 me-2" type="radio" name="rdbArtist" id="limitArt1" value="5" checked>
+								<label class="form-check-label" for="flexRadioDefault1">
+									5 Tracks
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input ms-2 me-2" type="radio" name="rdbArtist" id="limitArt2" value="10">
+								<label class="form-check-label" for="flexRadioDefault1">
+									10 Tracks
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input ms-2 me-2" type="radio" name="rdbArtist" id="limitArt3" value="20">
+								<label class="form-check-label" for="flexRadioDefault1">
+									20 Tracks
+								</label>
+							</div>
 						</div>
-						<div class="form-check">
-						  <input class="form-check-input ms-2 me-2" type="radio" name="rdbCountry" id="limitCou2" value="10">
-						  <label class="form-check-label" for="flexRadioDefault1">
-						    10 Tracks
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input ms-2 me-2" type="radio" name="rdbCountry" id="limitCou3" value="20">
-						  <label class="form-check-label" for="flexRadioDefault1">
-						    20 Tracks
-						  </label>
-						</div>
-					</div>
-				</div>
-				<div class="col-6 text-center mt-3">
-					<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal" data-bs-target="#exampleModal1" onclick="loadTopTracksXml()">
-						Get Collection Xml
-					</button>
 
-					<!-- Modal -->
-					<div class="modal" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content" style="width:800px;">
-								<div class="modal-header">
-									<h5 class="modal-title text-dark" id="exampleModalLabel">Top Tracks Artists</h5>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div class="modal-body">
-									<table class="table table-dark" id="tabTopTracksXml"></table>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<div class="col-12 text-center mt-3">
+							<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal" data-bs-target="#exampleModal1" onclick="loadTopTracksXml()">
+								Get Collection Xml
+							</button>
+
+							<!-- Modal -->
+							<div class="modal" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content" style="width:800px;">
+										<div class="modal-header">
+											<h5 class="modal-title text-dark" id="exampleModalLabel">Top Tracks Artists</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<table class="table table-dark" id="tabTopTracksXml"></table>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="col-6 text-center mt-3">
-					<div class="input-group">
-						<label class="mt-2 me-2">Selecciona el País...</label>
-						<select class="form-select form-select-sm" style="height: 38px;" aria-label="Default select example" id="country">
-						  <option value="Spain" >Spain</option>
-						  <option value="Germany">Germany</option>
-						  <option value="France">France</option>
-						  <option value="Portugal">Portugal</option>
-							<option value="Colombia">Colombia</option>
-							<option value="Brazil" selected>Brazil</option>
-							<option value="Chile">Chile</option>
-							<option value="Italy">Italy</option>
-							<option value="Bulgaria">Bulgaria</option>
-							<option value="Argentina">Argentina</option>
-							<option value="United States">United States</option>
-							<option value="Egypt">Egypt</option>
-							<option value="Cameroon">Cameroon</option>
-							<option value="India">India</option>
-							<option value="Pakistan">Pakistan</option>
-						</select>
-						<!-- Button trigger modal -->
-						<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal" data-bs-target="#exampleModal2" onclick="loadChartTopArtistsJSONDoc()">
-							Get Collection Json
-						</button>
-
-						<!-- Modal -->
-						<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						  <div class="modal-dialog">
-						    <div class="modal-content" style="width:800px;">
-						      <div class="modal-header">
-						        <h5 class="modal-title text-dark" id="exampleModalLabel">Top Tracks Artist By Country</h5>
-						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						      </div>
-						      <div class="modal-body">
-										<p id="artist"></p>
-						      </div>
-						      <div class="modal-footer">
-						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						      </div>
-						    </div>
-						  </div>
+				<div class="col-sm-12 col-lg-6">
+					<div class="col-12 text-center">
+						<h3>Cançons més Famoses per País</h3>
+					</div>
+					<div class="col-12 text-center">
+						<div class="input-group">
+							<h5>Select Limit Tracks</h5>
+							<div class="form-check">
+							  <input class="form-check-input ms-2 me-2" type="radio" name="rdbCountry" id="limitCou1" value="5" checked>
+							  <label class="form-check-label" for="flexRadioDefault1">
+							    5 Tracks
+							  </label>
+							</div>
+							<div class="form-check">
+							  <input class="form-check-input ms-2 me-2" type="radio" name="rdbCountry" id="limitCou2" value="10">
+							  <label class="form-check-label" for="flexRadioDefault1">
+							    10 Tracks
+							  </label>
+							</div>
+							<div class="form-check">
+							  <input class="form-check-input ms-2 me-2" type="radio" name="rdbCountry" id="limitCou3" value="20">
+							  <label class="form-check-label" for="flexRadioDefault1">
+							    20 Tracks
+							  </label>
+							</div>
 						</div>
+					</div>
 
+					<div class="col-12 text-center mt-3">
+						<div class="input-group">
+							<label class="mt-2 me-2">Selecciona el País...</label>
+							<select class="form-select form-select-sm" style="height: 38px;" aria-label="Default select example" id="country">
+							  <option value="Spain" >Spain</option>
+							  <option value="Germany">Germany</option>
+							  <option value="France">France</option>
+							  <option value="Portugal">Portugal</option>
+								<option value="Colombia">Colombia</option>
+								<option value="Brazil" selected>Brazil</option>
+								<option value="Chile">Chile</option>
+								<option value="Italy">Italy</option>
+								<option value="Bulgaria">Bulgaria</option>
+								<option value="Argentina">Argentina</option>
+								<option value="United States">United States</option>
+								<option value="Egypt">Egypt</option>
+								<option value="Cameroon">Cameroon</option>
+								<option value="India">India</option>
+								<option value="Pakistan">Pakistan</option>
+							</select>
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-light mb-3 rounded" data-bs-toggle="modal" data-bs-target="#exampleModal2" onclick="loadChartTopArtistsJSONDoc()">
+								Get Collection Json
+							</button>
+
+							<!-- Modal -->
+							<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							  <div class="modal-dialog">
+							    <div class="modal-content" style="width:800px;">
+							      <div class="modal-header">
+							        <h5 class="modal-title text-dark" id="exampleModalLabel">Top Tracks Artist By Country</h5>
+							        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							      </div>
+							      <div class="modal-body">
+											<p id="artist"></p>
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
 
+				<div class="col-sm-12 col-lg-6">
+
+				</div>
+
+				<div class="col-sm-12 col-lg-6">
+
+				</div>
+				
+			</div>
 		</div>
 	</body>
 </html>
