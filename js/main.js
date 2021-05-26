@@ -8,8 +8,8 @@ var sessionKey;
 console.log(captured);
 
 window.onload = function(){
-  if(localStorage.getItem("sessionKey") ==  null){
-    var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
+  //if(localStorage.getItem("sessionKey") ==  null){
+    //var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
     var dades = {
       method: "auth.getSession",
       api_key : myAPI_key,
@@ -33,7 +33,7 @@ window.onload = function(){
              $('#error').html('Error Code: ' + code + ', Error Message: ' + message);
         }
     });
-  }
+  //}
 }
 
 function call_userGetInfo(usuari){
