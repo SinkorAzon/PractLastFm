@@ -4,113 +4,64 @@ var myshared_secret="dff45169a9bd10061e6f7313a0595509";
 var url = window.location.href; // or window.location.href for current url
 var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
 var result = captured ? captured : 'myDefaultValue';
+var sessionKey;
 console.log(captured);
 
-$.ajax({
-    type : 'GET',
-    url : 'http://ws.audioscrobbler.com/2.0/?',
-    data : 'method=user.getinfo&' +
-           'user=SinkorAzon&'+
-           //'user=' + name + '&'+
-           'api_key=6639a92311bbbc06dd40a075be240e27&' +
-           'format=json',
-    dataType : 'json',
-    success : function(data) {
-            $('#success #artistName').html(data.user.name);
-           $('#success #artistImage').html('<img src="' + data.user.image[1]['#text'] + '" />');
-       },
-    error : function(code, message){
-         $('#error').html('Error Code: ' + code + ', Error Message: ' + message);
-    }
-});
-
-function calculateApiSignatureStack() {
-    // Set elsewhere but hacked into this example:
-    var last_fm_data = {
-        'last_token': captured,
-        'user': 'SinkorAzon',
-        'secret': 'dff45169a9bd10061e6f7313a0595509'
+window.onload = function(){
+  if(localStorage.getItem("sessionKey") ==  null){
+    var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
+    var dades = {
+      method: "auth.getSession",
+      api_key : myAPI_key,
+      token: captured,
+      format: "json"
     };
+    dades["api_sig"] =  calculate_apisig(dades);
 
-    // Kick it off.
-    lastFmCall('auth.getSession', {'token': last_fm_data['last_token']});
-
-
-    // Low level API call, purely builds a POSTable object and calls it.
-    function lastFmCall(method, data){
-        //data seria {'token': last_fm_data['last_token']} que seria captured o sessionStoragemyToken
-        // param data - dictionary.Populate Values on the Object s you'll see below the Key values can be any object and are not limited to Strings.
-        last_fm_data[method] = false;
-        // Somewhere to put the result after callback.
-
-        // Append some static variables
-        data.api_key = "6639a92311bbbc06dd40a075be240e27";
-        //data['format'] = 'json';
-        data['method'] = method;
-
-        post_data = lastFmCalculateApisig(data);
-        console.log("Post data: Last token " + post_data.token + "ApiKey: "+ post_data.api_key + "ApiSig: " + post_data.api_sig);
-        sessionStorage.setItem("myApiSig", post_data.api_sig );
-
-        var last_url="http://ws.audioscrobbler.com/2.0/?";
-        $.ajax({
-          type: "GET",
-          url: last_url,
-          data : 'method=auth.getSession' +
-                 '&token=' + captured +
-                 '&api_key=6639a92311bbbc06dd40a075be240e27' +
-                 '&api_sig=' + post_data.api_sig +
-                 '&format=json',
-          //data: post_data,
-          dataType: 'json',
-          //"success" gets called when the returned code is a "200" (successfull request). "error" gets called whenever another code is returned (e.g. 404, 500).
-          success: function(res){
-              //No caldria aquesta instrucció perque ja guaredem els que ens convé en sessionStorage
-              last_fm_data[method] = res;
-              //var	myresposta = JSON.parse(res);
-              console.log("Resposta: Name " + res.session.name);// Should return session key.
-              console.log("Resposta: Key " + res.session.key);
-
-              //store session key for further authenticate operations...
-              sessionStorage.setItem("mySessionUser", res.session.name);
-              sessionStorage.setItem("mySessionKey", res.session.key);
-          },
-          error : function(xhr, status, error){
-                var errorMessage = xhr.status + ': ' + xhr.statusText
-                console.log('Error - ' + errorMessage);
-          }
-         });
-    }
-
-    function lastFmCalculateApisig(params){
-        //Crec que només necessitem apikey, token i secret i no necessitem params, els podem treure de sessionStorage
-        //Calcula l'apiSig a partir dels valors d'abans...
-        ss = "";
-        st = [];
-        so = {};
-        so['api_key'] = params['api_key'];
-        so['token'] = params['token'];
-        Object.keys(params).forEach(function(key){
-            st.push(key); // Get list of object keys
-        });
-        st.sort(); // Alphabetise it
-        st.forEach(function(std){
-            ss = ss + std + params[std]; // build string
-        });
-        ss += last_fm_data['secret'];
-            // console.log(ss + last_fm_data['secret']);
-            //Segons documentacio : https://www.last.fm/api/webauth
-            //api signature = md5("api_keyxxxxxxxxmethodauth.getSessiontokenxxxxxxxmysecret")
-            //OBJECTIU NOSTRE SERA ACONSEGUIR UNA LINEA COM AQUESTA
-            // api_keyAPIKEY1323454formatjsonmethodauth.getSessiontokenTOKEN876234876SECRET348264386
-        //hashed_sec = $.md5(unescape(encodeURIComponent(ss)));
-        var hashed_sec = md5(unescape(encodeURIComponent(ss))); // "2063c1608d6e0baf80249c42e2be5804"
-        console.log("La apiSig es: " + hashed_sec);
-        so['api_sig'] = hashed_sec; // Correct when calculated elsewhere.
-        return so; // Returns signed POSTable object
-    }
+    $.ajax({
+        type : 'GET',
+        url : 'http://ws.audioscrobbler.com/2.0/?',
+        data : dades,
+        dataType : 'json',
+        success : function(data) {
+               call_userGetInfo(data.session.name);
+               sessionKey = data.session.key;
+               localStorage.setItem('sessionKey', sessionKey);
+               console.log(sessionKey);
+           },
+        error : function(code, message){
+             $('#error').html('Error Code: ' + code + ', Error Message: ' + message);
+        }
+    });
+  }
 }
 
+function call_userGetInfo(usuari){
+  var dadesGetInfo = {
+    method: "user.getInfo",
+    api_key : myAPI_key,
+    user: usuari,
+    format: "json"
+  };
+
+  $.ajax({
+      type : 'GET',
+      url : 'http://ws.audioscrobbler.com/2.0/?',
+      data : dadesGetInfo,
+      dataType : 'json',
+      success : function(data) {
+             $('#success #artistName').html(data.user.name);
+             $('#success #artistImage').html('<img src="' + data.user.image[1]['#text'] + '" />');
+         },
+      error : function(code, message){
+           $('#error').html('Error Code: ' + code + ', Error Message: ' + message);
+      }
+  });
+}
+
+/*
+
+*/
 function loadTopTracksXml() {
   var xhttp;
   if (window.XMLHttpRequest) {
@@ -300,80 +251,62 @@ function mostrarProgres(event) {
   }
 }
 
-function processarRespostaAddTagJquery(xml) {
-  txt = $(xml).find('lfm').attr('status');
-  if( txt == "ok") {
-    document.getElementById("tagDemo").innerHTML = "<h2>Added Tag Correct</h2>";
-  } else document.getElementById("tagDemo").innerHTML = "<h2>Failure</h2>";
-}
-
 function calculate_apisig(params){
-  //Crec que només necessitem apikey, token i secret i no necessitem params, els podem treure de sessionStorage
-  //Calcula l'apiSig a partir dels valors d'abans...
-    ss = "";
-    st = [];
-    so = {};
-    so['api_key'] = params['api_key'];
-    so['token'] = params['token'];
-    Object.keys(params).forEach(function(key){
-        st.push(key); // Get list of object keys
-    });
-    st.sort(); // Alphabetise it
-    st.forEach(function(std){
-        ss = ss + std + params[std]; // build string
-    });
-    ss += myshared_secret;
-    // console.log(ss + last_fm_data['secret']);
-    //Segons documentacio : https://www.last.fm/api/webauth
-    //api signature = md5("api_keyxxxxxxxxmethodauth.getSessiontokenxxxxxxxmysecret")
-    //OBJECTIU NOSTRE SERA ACONSEGUIR UNA LINEA COM AQUESTA
-    // api_keyAPIKEY1323454formatjsonmethodauth.getSessiontokenTOKEN876234876SECRET348264386
-    //hashed_sec = $.md5(unescape(encodeURIComponent(ss)));
-    var hashed_sec = md5(unescape(encodeURIComponent(ss))); // "2063c1608d6e0baf80249c42e2be5804"
-    console.log("La apiSig es: " + hashed_sec);
-    so['api_sig'] = hashed_sec; // Correct when calculated elsewhere.
-    return so; // Returns signed POSTable object
+  let stringActual = "";
+  let arrayKeysAuxiliar = [];
+
+  Object.keys(params).forEach(function(key){
+    if ( key !== 'format' && key !== 'callback') {
+      arrayKeysAuxiliar.push(key);
+    }
+  });
+
+  arrayKeysAuxiliar.sort();
+  arrayKeysAuxiliar.forEach(function(Key){
+    stringActual = stringActual + Key + params[Key];
+  });
+
+  stringActual = stringActual + myshared_secret;
+  stringActual = unescape(encodeURIComponent(stringActual));
+  var myapisig = md5(unescape(encodeURIComponent(stringActual)))
+
+  return myapisig;
 }
 
 function addTrackTagJquery() {
-  if (sessionStorage.getItem("mySessionKey") == null) {
+  console.log(sessionKey);
+  if (sessionKey == null) {
     console.log("Error no estas authenticat");
   } else {
-    //Estas loguejat i autenticat de forma correcta--
-    var tag1="Relax";
-    var tag2="Intense";
     //O be aixi i despres utilitzem una funcio per convertir-lo en string ( convertirenParametresDades del ioc)
     var dades = {
       method: "track.addTags",
       artist : "Ksi",
-      track : "Patience",
+      track : "Beerus",
       //A comma delimited list of user supplied tags to apply to this track. Accepts a maximum of 10 tags.
       //  tags : [tag1,tag2], but i think "tag1,tag2, tag3..." SHOULD WORK (  maximum of 10 tags)
       //Tags as other parameters should be utf8-encoded two or more parameters seems doesnt work
-      tags : "nice",
+      tags : "Intense",
       api_key : myAPI_key,
-      token : captured,
-      sk : sessionStorage.getItem("mySessionKey")
+      sk : sessionKey,
+      format: "json"
     };
 
     var last_url="http://ws.audioscrobbler.com/2.0/";
-
-    var myapisigtag = calculate_apisig(dades);
-    console.log("La apiSig de Add TAg es: " + myapisigtag['api_sig']);
     //Hauria de poder esborrar token perque no ho necessita en teoria pero si no no funciona
     //delete dades["token"];
-    dades['api_sig']= myapisigtag['api_sig'];
+    dades['api_sig'] = calculate_apisig(dades);
 
     $.ajax({
       type: "POST", //both are same, in new version of jQuery type renamed to method
       url: last_url,
       data: dades,
-      dataType: "xml", //datatype especifica el tipus de dada que s'espera rebre del servidor
+      dataType: "json", //datatype especifica el tipus de dada que s'espera rebre del servidor
       success: function(res){
-          processarRespostaAddTagJquery(res);
+          document.getElementById("tagDemo").innerHTML = "<h2>Added Tag Correct</h2>";
       },
       error : function(){
-          console.log("Error en addTag to track" + dades.track + "de l'artista" + dades.artist);
+          console.log("Error en addTag to track " + dades.track + " de l'artista " + dades.artist);
           document.getElementById("tagDemo").innerHTML = "<h2>Failure</h2>";
       }
     });
