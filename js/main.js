@@ -5,41 +5,37 @@ var url = window.location.href; // or window.location.href for current url
 var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
 var result = captured ? captured : 'myDefaultValue';
 var sessionKey;
-console.log(captured);
 
 window.onload = function(){
-  //if(localStorage.getItem("sessionKey") ==  null){
-    //var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
-    var dades = {
-      method: "auth.getSession",
-      api_key : myAPI_key,
-      token: captured,
-      format: "json"
-    };
-    dades["api_sig"] =  calculate_apisig(dades);
+  var dades = {
+    method: "auth.getSession",
+    api_key : myAPI_key,
+    token: captured,
+    format: "json"
+  };
+  dades["api_sig"] =  calculate_apisig(dades);
 
-    $.ajax({
-        type : 'GET',
-        url : 'http://ws.audioscrobbler.com/2.0/?',
-        data : dades,
-        dataType : 'json',
-        success : function(data) {
-               call_userGetInfo(data.session.name);
-               sessionKey = data.session.key;
-               localStorage.setItem('sessionKey', sessionKey);
-               console.log(sessionKey);
-           },
-        error : function(code, message){
-             $('#error').html('Error Code: ' + code + ', Error Message: ' + message);
-        }
-    });
-  //}
+  $.ajax({
+      type : 'GET',
+      url : 'http://ws.audioscrobbler.com/2.0/?',
+      data : dades,
+      dataType : 'json',
+      success : function(data) {
+             sessionKey = data.session.key;
+             sessionStorage.setItem('sessionKey', sessionKey);
+             call_userGetInfo(data.session.name);
+             console.log(sessionKey);
+         },
+      error : function(code, message){
+           $('#error').html('Error Code: ' + code + ', Error Message: ' + message);
+      }
+  });
 }
 
 function call_userGetInfo(usuari){
   var dadesGetInfo = {
     method: "user.getInfo",
-    api_key : myAPI_key,
+    api_key: myAPI_key,
     user: usuari,
     format: "json"
   };
@@ -50,6 +46,7 @@ function call_userGetInfo(usuari){
       data : dadesGetInfo,
       dataType : 'json',
       success : function(data) {
+             //trackLoveJquery();
              $('#success #artistName').html(data.user.name);
              $('#success #artistImage').html('<img src="' + data.user.image[1]['#text'] + '" />');
          },
@@ -59,9 +56,45 @@ function call_userGetInfo(usuari){
   });
 }
 
-/*
+function trackLoveJquery() {
+    if (sessionStorage.getItem("sessionKey") == null) {
+      console.log("Error no estas authenticat");
+    } else {
+        var last_url="http://ws.audioscrobbler.com/2.0/";
+        // Others Tracks For Test : Millions, Ares, Complicated
+        var dadestl = {
+            method: 'track.love',
+            track: Utf8.encode('Domain'),
+            artist: Utf8.encode('Ksi'),
+            api_key: myAPI_key,
+            sk: sessionStorage.getItem("sessionKey")
+        };
+        dadestl["api_sig"] =  calculate_apisig(dadestl);
+        console.log("La apiSig de Track love es: " + dadestl['api_sig']);
 
-*/
+        $.ajax({
+            type: "POST",
+            url: last_url,
+            data: dadestl,
+            dataType: "xml",
+            success: function(res){
+                processarRespostaLoveTrackJquery(res);
+            },
+            error : function(xhr, ajaxOptions, thrownError){
+                console.log("Error en Love Track to track " + dadestl.track + " de l'artista " + dadestl.artist);
+                document.getElementById("tagDemo").innerHTML = "<h2>Failure</h2>";
+            }
+         });
+
+         function processarRespostaLoveTrackJquery(xml) {
+             txt = $(xml).find('lfm').attr('status');
+             if( txt == "ok") {
+               document.getElementById("tagDemo").innerHTML = "<h2>Added Track Love Correct</h2>";
+             } else document.getElementById("tagDemo").innerHTML = "<h2>Failure Track Love</h2>";
+         }
+    }
+}
+
 function loadTopTracksXml() {
   var xhttp;
   if (window.XMLHttpRequest) {
