@@ -1,11 +1,26 @@
+/**
+ * @author Eric Quintana Muñoz <equintana@almata.cat>
+ */
+
 var myAPI_key="6639a92311bbbc06dd40a075be240e27";
 var myshared_secret="dff45169a9bd10061e6f7313a0595509";
 
-var url = window.location.href; // or window.location.href for current url
-var captured = /token=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
+var url = window.location.href;
+var captured = /token=([^&]+)/.exec(url)[1];
 var result = captured ? captured : 'myDefaultValue';
 var sessionKey;
 
+
+/**
+ * call window.onload - Funcion que s'executa al inici on cridem a la metode
+ * auth.getSession on obtindrem la clau de sessió per al usuari.
+ *
+ * @param dades - Tupla que conte l'informació que necessaria per funcionar
+ * (methode, api_key, token, format). El param dades[api_sig] s'afegeix mes tard
+ * a la tupla, ja que s'ha de calcular la api_sig.
+ * @param sessionKey - Recollim la Session Key.
+ *
+ */
 window.onload = function(){
   var dades = {
     method: "auth.getSession",
@@ -32,6 +47,16 @@ window.onload = function(){
   });
 }
 
+/**
+ * call_userGetInfo - Funcio que crida al metode user.getInfo on obtindrem
+ * la informació del user que a iniciat Sessió a LastFm.
+ *
+ * @param usuari - Variable que rebra el nom de usuari i que despres
+ * s'utilitzara com a parametre per el metode user.getInfo.
+ * @param dadesGetInfo - Tupla que conte l'informació que necessaria per
+ * funcionar (methode, api_key, user, format).
+ *
+ */
 function call_userGetInfo(usuari){
   var dadesGetInfo = {
     method: "user.getInfo",
@@ -56,15 +81,26 @@ function call_userGetInfo(usuari){
   });
 }
 
+
+/**
+ * call trackLoveJquery - Funcio que crida al metode track.love, aquesta funció
+ * agrega el Track del artirsta com a favorita.
+ *
+ * @param dadestl - Tupla que conte l'informació que necessaria per funcionar
+ * (methode, api_key, user, format). El param dades[api_sig] s'afegeix mes tard
+ * a la tupla, ja que s'ha de calcular la api_sig.
+ * @param last_url - Url que s'utilitzara per afegir a favorit el Track del
+ * artista.
+ *
+ */
 function trackLoveJquery() {
     if (sessionStorage.getItem("sessionKey") == null) {
       console.log("Error no estas authenticat");
     } else {
         var last_url="http://ws.audioscrobbler.com/2.0/";
-        // Others Tracks For Test : Millions, Ares, Complicated
         var dadestl = {
             method: 'track.love',
-            track: Utf8.encode('Domain'),
+            track: Utf8.encode('Domain'), // Others Tracks For Test : Millions, Ares, Complicated
             artist: Utf8.encode('Ksi'),
             api_key: myAPI_key,
             sk: sessionStorage.getItem("sessionKey")
@@ -86,6 +122,14 @@ function trackLoveJquery() {
             }
          });
 
+         /**
+          * processarRespostaLoveTrackJquery - Funcio que processa l'informació
+          * i ens retorna un document.
+          *
+          * @param  xml - Cerca dintre de lfm.status on es guardara dintre de
+          * la variable txt el valor de ok.
+          *
+          */
          function processarRespostaLoveTrackJquery(xml) {
              txt = $(xml).find('lfm').attr('status');
              if( txt == "ok") {
