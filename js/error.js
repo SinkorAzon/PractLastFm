@@ -1,4 +1,18 @@
 
+/**
+ * @author Eric Quintana Muñoz <equintana@almata.cat>
+ *
+ */
+ 
+/**
+ * Call errorStage - Funcio que mitjançant el codi d'error que arribi mostrara
+ * el missatge d'eeror respectiu.
+ *
+ * @param errorCode - Parametre que conte el numero de error.
+ *
+ * @return {string} missError - Missatge de error.
+ *
+ */
 function errorStage(errorCode){
   switch (errorCode) {
     case 0:
