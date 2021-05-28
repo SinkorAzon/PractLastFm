@@ -37,7 +37,7 @@ window.onload = function(){
 
   $.ajax({
       type : 'GET',
-      url : 'http://ws.audioscrobbler.com/2.0/?',
+      url : 'https://ws.audioscrobbler.com/2.0/?',
       data : dades,
       dataType : 'json',
       success : function(data) {
@@ -72,7 +72,7 @@ function call_userGetInfo(usuari){
 
   $.ajax({
       type : 'GET',
-      url : 'http://ws.audioscrobbler.com/2.0/?',
+      url : 'https://ws.audioscrobbler.com/2.0/?',
       data : dadesGetInfo,
       dataType : 'json',
       success : function(data) {
@@ -102,7 +102,7 @@ function trackLoveJquery() {
     if (sessionStorage.getItem("sessionKey") == null) {
       console.log("Error no estas authenticat");
     } else {
-        var last_url="http://ws.audioscrobbler.com/2.0/";
+        var last_url="https://ws.audioscrobbler.com/2.0/";
         var dadestl = {
             method: 'track.love',
             track: Utf8.encode('Domain'), // Others Tracks For Test : Millions, Ares, Complicated
@@ -249,7 +249,7 @@ function loadChartTopArtistsJSONDoc() {
   var country = null;
   country = document.getElementById("country").value;
 
-  var urlquery ="http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=" + country + "&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
+  var urlquery ="https://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=" + country + "&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
   httpRequest.onreadystatechange = processarCanviEstat;
 
   httpRequest.open('GET', urlquery, true);
@@ -332,7 +332,7 @@ function loadTopAlbumJSON(){
 
 	httpRequest.onprogress = mostrarProgres;
 
-  var urlquery ="http://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=Ksi&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
+  var urlquery ="https://ws.audioscrobbler.com/2.0/?method=artist.gettopalbums&artist=Ksi&api_key=6639a92311bbbc06dd40a075be240e27&format=json";
   httpRequest.onreadystatechange = processarCanviEstat;
 
   httpRequest.open('GET', urlquery, true);
@@ -468,7 +468,7 @@ function addTrackTagJquery() {
       format: "json"
     };
 
-    var last_url="http://ws.audioscrobbler.com/2.0/";
+    var last_url="https://ws.audioscrobbler.com/2.0/";
     dades['api_sig'] = calculate_apisig(dades);
 
     $.ajax({
